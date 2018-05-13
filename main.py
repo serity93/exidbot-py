@@ -1,3 +1,4 @@
+import constants
 import discord
 from discord.ext import commands
 
@@ -14,4 +15,4 @@ async def on_ready():
 async def helloworld(ctx):
     await ctx.send("Hello world!")
 
-bot.run('NDQyMzcwOTQ2MDIwNDA5MzU1.DdFCng.r0OvBdSZZSaJ50m7Vd0dJWLy6qs')
+bot.run(constants.TOKEN)
