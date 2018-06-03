@@ -21,15 +21,17 @@ async def on_ready():
     print(bot.user.id)
     print('--------')
 
+@bot.event
+async def on_member_join(member):
+    print ('Hello')
+
+@bot.event
+async def on_member_leave(member):
+    print ('Bye bye')
+
 @bot.command(pass_context=True)
 async def helloworld(context):
     await context.send("Hello world!")
-
-@client.event
-async def on_member_join(member):
-    print("Recognised that a member called " + member.name + " joined")
-    await bot.send_message(member, "hello")
-    print("Sent message to " + member.name)
 
 @bot.command(name='solji',
              description='Posts a random Solji pic.',
