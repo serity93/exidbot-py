@@ -23,15 +23,15 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
-    print ('Hello')
+    print("Recognised that a member called " + member.name + " joined")
+    channel = member.guild.get_channel(constants.BOT_TESTING)
+    await channel.send("Welcome {} to the server!".format(member.name))
 
 @bot.event
-async def on_member_leave(member):
-    print ('Bye bye')
-
-@bot.command(pass_context=True)
-async def helloworld(context):
-    await context.send("Hello world!")
+async def on_member_remove(member):
+    print("Recognised that a member called " + member.name + " left")
+    channel = member.guild.get_channel(constants.BOT_TESTING)
+    await channel.send("{} left the server!".format(member.name))
 
 @bot.command(name='solji',
              description='Posts a random Solji pic.',
