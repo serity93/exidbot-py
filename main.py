@@ -23,16 +23,22 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
-    print("Member " + member.name + " joined the server")
-    channel = member.guild.get_channel(constants.GENERAL_CHAN_ID)
-    await channel.send("Welcome {} to the server! :soLDanceGif: Remember to check out {} and {}! LEGGO!"
+    guild = member.guild
+    general_channel = guild.get_channel(constants.GENERAL_CHAN_ID)
+    roles = guild.roles
+
+    await general_channel.send("Welcome {} to the server! :soLDanceGif: Remember to check out {} and {}! LEGGO!"
         .format(member.mention,
-        member.guild.get_channel(constants.WELCOME_CHAN_ID).mention,
-        member.guild.get_channel(constants.PICK_UR_BIAS_CHAN_ID).mention))
+        guild.get_channel(constants.WELCOME_CHAN_ID).mention,
+        guild.get_channel(constants.PICK_UR_BIAS_CHAN_ID).mention))
+
+    for role in roles:
+        if role.id == constants.LEGGO_ROLE_ID:
+            await member.add_roles(role)
+            break
 
 @bot.event
 async def on_member_remove(member):
-    print("Member " + member.name + " left the server")
     channel = member.guild.get_channel(constants.GENERAL_CHAN_ID)
     await channel.send("**{}** left the server! I hate you for this, can't you feel it? :JungSad:"
         .format(member.name))
