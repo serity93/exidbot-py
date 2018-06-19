@@ -33,13 +33,13 @@ async def on_member_join(member):
         guild.get_channel(constants.WELCOME_CHAN_ID).mention,
         guild.get_channel(constants.PICK_UR_BIAS_CHAN_ID).mention))
 
+    gif = os.path.join(constants.GIF_DIR, constants.WELCOME_GIF)
+    await general_channel.send(file=discord.File(gif))
+
     for role in roles:
         if role.id == constants.LEGGO_ROLE_ID:
             await member.add_roles(role)
             break
-
-    gif = os.path.join(constants.GIF_DIR, constants.WELCOME_GIF)
-    await general_channel.send(file=discord.File(gif))
 
 @bot.event
 async def on_member_remove(member):
