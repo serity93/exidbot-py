@@ -1,6 +1,7 @@
 import constants
 import discord
 import logging
+import os
 
 from discord.ext import commands
 
@@ -36,6 +37,9 @@ async def on_member_join(member):
         if role.id == constants.LEGGO_ROLE_ID:
             await member.add_roles(role)
             break
+
+    gif = os.path.join(constants.GIF_DIR, constants.WELCOME_GIF)
+    await general_channel.send(file=discord.File(gif))
 
 @bot.event
 async def on_member_remove(member):
