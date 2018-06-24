@@ -90,7 +90,7 @@ async def role(context, role_arg):
                     await member.add_roles(role_to_add)
                     message = await context.send("Successfully added the role '" + role_to_add.name + "'.")
                 except Exception:
-                    message = await context.send("Failed to add add role '" + role_arg + "'!")
+                    message = await context.send("Failed to add role '" + role_arg + "'!")
         else:
             message = await context.send("Not sure if you wanted to add or remove '" + role_arg + "'! Add '+/-' at the start of the role name to add/remove the role.")
 
