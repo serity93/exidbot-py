@@ -41,7 +41,7 @@ async def on_member_join(member):
     general_channel = guild.get_channel(GENERAL_CHAN_ID)
     roles = guild.roles
 
-    await general_channel.send("Welcome {} to the server! :soLDanceGif: Remember to check out {} and {}! LEGGO!"
+    await general_channel.send("Welcome {} to the server! <a:solDanceGif:393867117482737674> Remember to check out {} and {}! LEGGO!"
         .format(member.mention,
         guild.get_channel(WELCOME_CHAN_ID).mention,
         guild.get_channel(PICK_UR_BIAS_CHAN_ID).mention))
@@ -55,7 +55,7 @@ async def on_member_join(member):
 @bot.event
 async def on_member_remove(member):
     channel = member.guild.get_channel(GENERAL_CHAN_ID)
-    await channel.send("**{}** left the server! I hate you for this, can't you feel it? :JungSad:"
+    await channel.send("**{}** left the server! I hate you for this, can't you feel it? <:JungSad:232632633186713601>"
         .format(member.name))
 
 # COMMANDS
