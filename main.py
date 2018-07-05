@@ -20,13 +20,9 @@ handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w'
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(handler)
 
-# DESERIALIZE JSON
-with open(JSON_DATA_FILE, "r") as file:
-    json_data = json.load(file)
-
-json_roles = json_data['roles']
-
-# EVENTS
+################################
+## BOT EVENTS
+################################
 
 @bot.event
 async def on_ready():
@@ -37,6 +33,10 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
+    with open(JSON_DATA_FILE, "r") as file:
+        json_data = json.load(file)
+    json_roles = json_data['roles']
+
     guild = member.guild
     general_channel = guild.get_channel(GENERAL_CHAN_ID)
     roles = guild.roles
@@ -46,7 +46,7 @@ async def on_member_join(member):
         guild.get_channel(WELCOME_CHAN_ID).mention,
         guild.get_channel(PICK_UR_BIAS_CHAN_ID).mention))
 
-    gif = os.path.join(GIF_DIR, WELCOME_GIF)
+    gif = os.path.join(RESOURCES_DIR, WELCOME_GIF)
     await general_channel.send(file=discord.File(gif))
 
     role = get_guild_role(json_roles['LEGGO']['id'], roles)
@@ -58,18 +58,37 @@ async def on_member_remove(member):
     await channel.send("**{}** left the server! I hate you for this, can't you feel it? <:JungSad:232632633186713601>"
         .format(member.name))
 
-# COMMANDS
+@bot.event
+async def on_message(message):
+    if message.author == bot.user:
+        return
+    elif message.content.startswith('_'):
+        await gif_command(message)
+    else:
+        await bot.process_commands(message)
+
+################################
+## MOD COMMANDS
+################################
+
+################################
+## SERVER MEMBER COMMANDS
+################################
 
 @bot.command(name='role', pass_context=True)
 async def role(context, role_arg):
     if context.message.channel.id == PICK_UR_BIAS_CHAN_ID:
+        with open(JSON_DATA_FILE, "r") as file:
+            json_data = json.load(file)
+        json_roles = json_data['roles']
+
         member = context.message.author
         roles = context.guild.roles
         message = None
 
         if role_arg.startswith('-'):
             role_arg = role_arg[1:]
-            json_role = json_roles[role_arg]
+            json_role = json_roles.get(role_arg, None)
             if json_role is None:
                 message = await context.send("Cannot remove the role '" + role_arg + "'! Did you type it correctly?")
             else:
@@ -81,7 +100,7 @@ async def role(context, role_arg):
                     message = await context.send("Failed to remove the role '" + role_arg + "'!")      
         elif role_arg.startswith('+'):
             role_arg = role_arg[1:]
-            json_role = json_roles[role_arg]
+            json_role = json_roles.get(role_arg, None)
             if json_role is None:
                 message = await context.send("Cannot add the role '" + role_arg + "'! Did you type it correctly?")
             else:
@@ -97,6 +116,25 @@ async def role(context, role_arg):
         await asyncio.sleep(5)
         await context.message.delete()
         await message.delete()
+
+#bot.command - post a gif
+async def gif_command(message):
+    gif_name = message.content[1:]
+    gif_files = os.listdir(GIF_DIR)
+    
+    if gif_name == 'list':
+        list_string = '```'
+        for gif_file in gif_files:
+            list_string += '_' + gif_file[:-4] + '\n'
+        list_string += '```'
+        await message.channel.send(content=list_string)
+        return
+
+    for gif_file in gif_files:
+        if gif_name == gif_file[:-4]:
+            gif = os.path.join(GIF_DIR, gif_file)
+            await message.channel.send(file=discord.File(gif))
+            return
 
 @bot.command(name='solji',
              description='Posts a random Solji pic.',
