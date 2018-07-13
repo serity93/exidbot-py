@@ -20,8 +20,6 @@ WELCOME_GIF = 'welcome.gif'
 # GOOGLE DRIVE API
 SCOPES = ['https://www.googleapis.com/auth/drive']
 SERVICE_ACCOUNT = 'service_account.json'
-CREDENTIALS = 'credentials.json'
-CLIENT_SECRET = 'client_secret.json'
 GROUP_FOLDER = '1MqQ5tHV-1_Gv9nl5mF248ek6Lyt6INCz'
 SOLJI_FOLDER = '1I1_gTX2JbtaO6c6JL21yqXnMCDvIjyxM'
 LE_FOLDER = '170obxkpILgejaLMDu5vyoTmzdBiz99xG'
