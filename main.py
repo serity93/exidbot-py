@@ -13,16 +13,12 @@ from apiclient.http import MediaIoBaseDownload
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 from googleapiclient import discovery
-from httplib2 import Http
-from oauth2client import client, file, tools
+from google.oauth2 import service_account
 
 # Setup the Drive v3 API
-store = file.Storage(CREDENTIALS)
-creds = store.get()
-if not creds or creds.invalid:
-    flow = client.flow_from_clientsecrets(CLIENT_SECRET, SCOPES)
-    creds = tools.run_flow(flow, store)
-drive_service = discovery.build('drive', 'v3', http=creds.authorize(Http()))
+credentials = service_account.Credentials.from_service_account_file(
+    SERVICE_ACCOUNT, scopes=SCOPES)
+drive_service = discovery.build('drive', 'v3', credentials=credentials)
 
 # CREATE BOT
 bot = commands.Bot(command_prefix='.',
