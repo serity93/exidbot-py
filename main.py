@@ -33,7 +33,10 @@ def get_prefix(bot, message):
 
     return commands.when_mentioned_or(*prefixes)(bot, message)
 
-initial_extensions = ['cogs.random_pic']
+initial_extensions = [
+    'cogs.owner',
+    'cogs.random_pic'
+    ]
 
 # CREATE BOT
 bot = commands.Bot(command_prefix=get_prefix,
@@ -116,18 +119,6 @@ def user_is_blacklisted(user_roles):
     blacklist_role = json_roles['Blacklist']
 
     return blacklist_role in user_roles
-
-################################
-## MOD COMMANDS
-################################
-
-@bot.command(name='exit',
-             description='Shuts down the bot.',
-             pass_context=True)
-@commands.has_role('Mods')
-async def exit(context):
-    await context.send('See ya!')
-    await bot.logout()
 
 ################################
 ## SERVER MEMBER COMMANDS
