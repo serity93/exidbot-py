@@ -3,4 +3,4 @@ __pycache__/
 *.log
 gifs/
 service_account.json
-token.py
+bottoken.py

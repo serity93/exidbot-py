@@ -1,28 +1,42 @@
-import asyncio
 import discord
-import io
+from discord.ext import commands
+
+import asyncio
 import json
 import logging
 import os
-import random as rnd
+import traceback
 import sys
 
 from constants import *
-from token import *
+from bottoken import *
+from util import *
 
-from apiclient.http import MediaIoBaseDownload
-from discord.ext import commands
-from discord.ext.commands.cooldowns import BucketType
-from googleapiclient import discovery
-from google.oauth2 import service_account
+"""
+A Discord bot written specifically for the EXID Discord server.
 
-# Setup the Drive v3 API
-credentials = service_account.Credentials.from_service_account_file(
-    SERVICE_ACCOUNT, scopes=SCOPES)
-drive_service = discovery.build('drive', 'v3', credentials=credentials)
+Bot owner & main contributor:
+    Sean Tyler (sean#0493) (https://github.com/serity93/EXIDbot)
+
+Discord.py Rewrite Documentation:
+    http://discordpy.readthedocs.io/en/rewrite/api.html
+
+Discord.py Rewrite Commands Documentation:
+    http://discordpy.readthedocs.io/en/rewrite/ext/commands/api.html
+"""
+
+def get_prefix(bot, message):
+    if not message.guild:
+        return '.'
+
+    prefixes = ['.']
+
+    return commands.when_mentioned_or(*prefixes)(bot, message)
+
+initial_extensions = ['cogs.random_pic']
 
 # CREATE BOT
-bot = commands.Bot(command_prefix='.',
+bot = commands.Bot(command_prefix=get_prefix,
                    description='A bot created for the EXID Discord server.',
                    case_insensitive=True)
 
@@ -33,16 +47,27 @@ handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w'
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(handler)
 
+if __name__ == '__main__':
+    for extension in initial_extensions:
+        try:
+            bot.load_extension(extension)
+        except Exception as e:
+            print(f'Failed to load extension {extension}.', file=sys.stderr)
+            traceback.print_exc()
+
 ################################
 ## BOT EVENTS
 ################################
 
 @bot.event
 async def on_ready():
-    print('Logged in as')
-    print(bot.user.name)
-    print(bot.user.id)
-    print('--------')
+    print('\n\n--------')
+    print(f'Logged in as: {bot.user.name} - {bot.user.id}\nVersion: {discord.__version__}')
+    print('--------\n')
+
+    await bot.change_presence(activity=discord.Activity(name='EXID', type=discord.ActivityType.listening))
+    
+    print(f'Successfully logged in and booted..!')
 
 @bot.event
 async def on_member_join(member):
@@ -84,20 +109,6 @@ async def on_message(message):
 ## FUNCTIONS
 ################################
 
-def get_guild_role(role_id, roles):
-    for role in roles:
-        if role.id == role_id:
-            return role
-
-def not_blacklisted(context):
-    with open(JSON_DATA_FILE, "r") as file:
-        json_data = json.load(file)
-    json_roles = json_data['roles']
-    guild_roles = context.guild.roles
-    
-    role = get_guild_role(json_roles['Blacklist']['id'], guild_roles)
-    return role not in context.message.author.roles
-
 def user_is_blacklisted(user_roles):
     with open(JSON_DATA_FILE, "r") as file:
         json_data = json.load(file)
@@ -105,48 +116,6 @@ def user_is_blacklisted(user_roles):
     blacklist_role = json_roles['Blacklist']
 
     return blacklist_role in user_roles
-
-async def random_pic(context, pic_q):
-    response = {}
-    page_token = None
-    rnd.seed()
-
-    while True:
-        try:
-            param = {}
-            param['q'] = pic_q
-            param['spaces'] = 'drive'
-            param['fields'] = 'nextPageToken, files(id, name)'
-            param['pageSize'] = 100
-            if page_token:
-                param['pageToken'] = page_token
-
-            response = drive_service.files().list(**param).execute()
-            page_token = response.get('nextPageToken')
-            
-            if not page_token or rnd.randint(0,100) >= 30:
-                break
-
-        except Exception as e:
-            print("An error occured: {}".format(e))
-            return
-    
-    pics = response.get('files', [])
-    num_pics = len(pics)
-    random_pic = pics[rnd.randint(0, num_pics-1)]
-
-    request = drive_service.files().get_media(fileId=random_pic['id'])
-    file_name = random_pic['name']
-    fh = io.FileIO(random_pic['name'], 'wb')
-    downloader = MediaIoBaseDownload(fh, request)
-    done = False
-    while done is False:
-        status, done = downloader.next_chunk()
-
-    await context.send(file=discord.File(file_name))
-    await asyncio.sleep(5)
-    fh.close()
-    os.remove(file_name)
 
 ################################
 ## MOD COMMANDS
@@ -227,83 +196,5 @@ async def gif_command(message):
             gif = os.path.join(GIF_DIR, gif_file)
             await message.channel.send(file=discord.File(gif))
             return
-
-@bot.command(name='group',
-             description='Posts a random group pic.',
-             pass_context=True)
-@commands.cooldown(1, 10, BucketType.user)
-@commands.check(not_blacklisted)
-async def group(context):
-    await random_pic(context, GROUP_PIC_Q)
-
-@bot.command(name='solji',
-             description='Posts a random Solji pic.',
-             aliases=['soulg'],
-             pass_context=True)
-@commands.cooldown(1, 10, BucketType.user)
-@commands.check(not_blacklisted)
-async def solji(context):
-    await random_pic(context, SOLJI_PIC_Q)
-
-@bot.command(name='le',
-             description='Posts a random LE pic.',
-             aliases=['hyojin', 'elly'],
-             pass_context=True)
-@commands.cooldown(1, 10, BucketType.user)
-@commands.check(not_blacklisted)
-async def le(context):
-    await random_pic(context, LE_PIC_Q)
-
-@bot.command(name='hani',
-             description='Posts a random Hani pic.',
-             aliases=['heeyeon'],
-             pass_context=True)
-@commands.cooldown(1, 10, BucketType.user)
-@commands.check(not_blacklisted)
-async def hani(context):
-    await random_pic(context, HANI_PIC_Q)
-
-@bot.command(name='hyelin',
-             description='Posts a random Hyelin pic.',
-             aliases=['hyerin'],
-             pass_context=True)
-@commands.cooldown(1, 10, BucketType.user)
-@commands.check(not_blacklisted)
-async def hyelin(context):
-    await random_pic(context, HYELIN_PIC_Q)
-
-@bot.command(name='jeonghwa',
-             description='Posts a random Jeonghwa pic.',
-             aliases=['junghwa'],
-             pass_context=True)
-@commands.cooldown(1, 10, BucketType.user)
-@commands.check(not_blacklisted)
-async def jeonghwa(context):
-    await random_pic(context, JEONGHWA_PIC_Q)
-
-@bot.command(name='random',
-             description='Posts a random EXID pic.',
-             pass_context=True)
-@commands.cooldown(1, 10, BucketType.user)
-@commands.check(not_blacklisted)
-async def random(context):
-    random_q = ''
-    rnd.seed()
-
-    random_int = rnd.randint(1,60)
-    if random_int >= 1 and random_int <= 10:
-        random_q = GROUP_PIC_Q
-    elif random_int >= 11 and random_int <= 20:
-        random_q = SOLJI_PIC_Q
-    elif random_int >= 21 and random_int <= 30:
-        random_q = LE_PIC_Q
-    elif random_int >= 31 and random_int <= 40:
-        random_q = HANI_PIC_Q
-    elif random_int >= 41 and random_int <= 50:
-        random_q = HYELIN_PIC_Q
-    else:
-        random_q = JEONGHWA_PIC_Q
-
-    await random_pic(context, random_q)
 
 bot.run(TOKEN)
