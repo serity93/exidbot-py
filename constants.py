@@ -1,5 +1,3 @@
-TOKEN = 'NDQyMzcwOTQ2MDIwNDA5MzU1.DdFCng.r0OvBdSZZSaJ50m7Vd0dJWLy6qs'
-
 # FILES
 JSON_DATA_FILE = 'data.json'
 

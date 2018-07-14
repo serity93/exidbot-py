@@ -8,6 +8,7 @@ import random as rnd
 import sys
 
 from constants import *
+from token import *
 
 from apiclient.http import MediaIoBaseDownload
 from discord.ext import commands
