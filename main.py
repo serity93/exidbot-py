@@ -59,10 +59,6 @@ if __name__ == '__main__':
             print(f'Failed to load extension {extension}.', file=sys.stderr)
             traceback.print_exc()
 
-################################
-## BOT EVENTS
-################################
-
 @bot.event
 async def on_ready():
     print('\n\n--------')
@@ -108,22 +104,6 @@ async def on_message(message):
         await gif_command(message)
     else:
         await bot.process_commands(message)
-
-################################
-## FUNCTIONS
-################################
-
-def user_is_blacklisted(user_roles):
-    with open(JSON_DATA_FILE, "r") as file:
-        json_data = json.load(file)
-    json_roles = json_data['roles']
-    blacklist_role = json_roles['Blacklist']
-
-    return blacklist_role in user_roles
-
-################################
-## SERVER MEMBER COMMANDS
-################################
 
 #bot.command - post a gif
 async def gif_command(message):
