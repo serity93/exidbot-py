@@ -67,7 +67,7 @@ async def on_ready():
 
     await bot.change_presence(activity=discord.Activity(name='EXID', type=discord.ActivityType.listening))
     
-    print(f'Successfully logged in and booted..!')
+    print('Successfully logged in and booted..!')
 
 @bot.event
 async def on_member_join(member):

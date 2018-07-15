@@ -12,6 +12,7 @@ class Owner:
         pass_context=True)
     @commands.is_owner()
     async def logout(self, context):
+        print('Logging out..!')
         await context.send('Logging out... See ya later!')
         await self.bot.logout()
 
