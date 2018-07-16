@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
 
-import asyncio
 import json
 import logging
 import os
@@ -35,6 +34,7 @@ def get_prefix(bot, message):
 
 initial_extensions = [
     'cogs.owner',
+    'cogs.scheduler',
     'cogs.member',
     'cogs.random_pic'
     ]
