@@ -17,3 +17,7 @@ If you would like to know more about EXID, feel free to join us: https://discord
 - Google Api Python Client & OAuth 2 Client
 
 `python3 -m pip install --upgrade google-api-python-client oauth2client`
+
+- APScheduler
+
+`python3 -m pip install apscheduler`
