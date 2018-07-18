@@ -17,6 +17,24 @@ class JsonData:
         if context.invoked_subcommand is None:
             await context.send(self.list_leave_messages())
     
+    @leave_messages.command(
+        name='add',
+        description='Adds a leave message.',
+        pass_context=True)
+    async def add(self, context, message:str):
+        with open(JSON_DATA_FILE, "r") as file:
+            json_data = json.load(file)
+        json_messages = json_data[LEAVE_MESSAGES]
+
+        json_messages.append(message)
+        json_data[LEAVE_MESSAGES] = json_messages
+
+        with open(JSON_DATA_FILE, "w") as outfile:
+            json.dump(json_data, outfile)
+        
+        await context.send(self.list_leave_messages())
+
+
     def list_leave_messages(self):
         with open(JSON_DATA_FILE, "r") as file:
             json_data = json.load(file)
