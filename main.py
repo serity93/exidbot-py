@@ -4,8 +4,9 @@ from discord.ext import commands
 import json
 import logging
 import os
-import traceback
+import random as rnd
 import sys
+import traceback
 
 from constants import *
 from bottoken import *
@@ -92,9 +93,16 @@ async def on_member_join(member):
 
 @bot.event
 async def on_member_remove(member):
+    with open(JSON_DATA_FILE, "r") as file:
+        json_data = json.load(file)
+    json_messages = json_data['leaveMessages']
+    num_msgs = len(json_messages)
+
+    rnd.seed()
+    n = rnd.randrange(0, num_msgs)
+
     channel = member.guild.get_channel(GENERAL_CHAN_ID)
-    await channel.send("**{}** left the server! I hate you for this, can't you feel it? <:JungSad:232632633186713601>"
-        .format(member.name))
+    await channel.send(f"**{member.name}** left the server! " + json_messages[n])
 
 @bot.event
 async def on_message(message):
