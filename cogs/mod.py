@@ -63,5 +63,29 @@ class Mod:
     except Exception as e:
       await context.send('Error when trying to ban **{}**: {}'.format(member.name, e))
 
+  @commands.command(name='pause',
+    description='Disable sending messages to the channel.',
+    aliases=['freeze'])
+  async def pause(self, context):
+    everyone_role = context.guild.default_role
+
+    try:
+      await context.channel.set_permissions(everyone_role, send_messages=False)
+      await context.send('Chat has been disabled.')
+    except Exception as e:
+      await context.send('Error disabling chat: {}'.format(e))
+
+  @commands.command(name='resume',
+    description='Enable sending messages to the channel (deletes overrides).',
+    aliases=['unpause', 'unfreeze'])
+  async def resume(self, context):
+    everyone_role = context.guild.default_role
+
+    try:
+      await context.channel.set_permissions(everyone_role, overwrite=None)
+      await context.send('Chat has been enabled.')
+    except Exception as e:
+      await context.send('Error enabling chat: {}'.format(e))
+
 def setup(bot):
     bot.add_cog(Mod(bot))
