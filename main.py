@@ -77,10 +77,10 @@ async def on_member_join(member):
     guild = member.guild
     general_channel = guild.get_channel(GENERAL_CHAN_ID)
 
-    await general_channel.send("Welcome {} to the server! <a:solDanceGif:393867117482737674> Remember to check out {} and {}! LEGGO!"
+    await general_channel.send("Welcome {} to the server! <a:solDanceGif:393867117482737674> Please {} to begin chatting and check out {} for more info! LEGGO!"
         .format(member.mention,
-        guild.get_channel(WELCOME_CHAN_ID).mention,
-        guild.get_channel(PICK_UR_BIAS_CHAN_ID).mention))
+        guild.get_channel(PICK_UR_BIAS_CHAN_ID).mention,
+        guild.get_channel(WELCOME_CHAN_ID).mention))
 
     gif = os.path.join(RESOURCES_DIR, WELCOME_GIF)
     await general_channel.send(file=discord.File(gif))
