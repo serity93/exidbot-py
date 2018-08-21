@@ -74,13 +74,8 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
-    with open(JSON_DATA_FILE, "r") as file:
-        json_data = json.load(file)
-    json_roles = json_data['roles']
-
     guild = member.guild
     general_channel = guild.get_channel(GENERAL_CHAN_ID)
-    roles = guild.roles
 
     await general_channel.send("Welcome {} to the server! <a:solDanceGif:393867117482737674> Remember to check out {} and {}! LEGGO!"
         .format(member.mention,
@@ -90,8 +85,8 @@ async def on_member_join(member):
     gif = os.path.join(RESOURCES_DIR, WELCOME_GIF)
     await general_channel.send(file=discord.File(gif))
 
-    role = get_guild_role(json_roles['LEGGO']['id'], roles)
-    await member.add_roles(role)
+    nugu_role = discord.utils.find(lambda r: r.name == 'Nugu', guild.roles)
+    await member.add_roles(nugu_role)
 
 @bot.event
 async def on_member_remove(member):
