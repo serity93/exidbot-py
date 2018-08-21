@@ -21,5 +21,25 @@ class Mod:
 
     await context.send('```{}```'.format(message))
 
+  @commands.command(name='mute')
+  async def mute(self, context, member:discord.Member):
+    mute_role = discord.utils.find(lambda r: r.name == 'Mute', context.guild.roles)
+    
+    try:
+      await member.add_roles(mute_role)
+      await context.send('Muting **{}**'.format(member.name))
+    except:
+      await context.send('Error when trying to mute **{}**!'.format(member.name))
+
+  @commands.command(name='unmute')
+  async def unmute(self, context, member:discord.Member):
+    mute_role = discord.utils.find(lambda r: r.name == 'Mute', context.guild.roles)
+    
+    try:
+      await member.remove_roles(mute_role)
+      await context.send('Unmuting **{}**'.format(member.name))
+    except:
+      await context.send('Error when trying to unmute **{}**!'.format(member.name))
+
 def setup(bot):
     bot.add_cog(Mod(bot))
