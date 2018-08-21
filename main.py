@@ -35,10 +35,11 @@ def get_prefix(bot, message):
 
 initial_extensions = [
     'cogs.owner',
+    'cogs.mod',
     'cogs.json_data',
     'cogs.scheduler',
     'cogs.member',
-    'cogs.random_pic'
+    'cogs.random_pic',
     ]
 
 # CREATE BOT
