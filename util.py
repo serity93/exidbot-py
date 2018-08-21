@@ -3,11 +3,6 @@ import json
 
 from constants import *
 
-def get_guild_role(role_id, roles):
-    for role in roles:
-        if role.id == role_id:
-            return role
-
 def not_blacklisted(context):
     blacklist_role = discord.utils.find(lambda r: r.name == 'Blacklist', context.guild.roles)
     return blacklist_role not in context.message.author.roles
