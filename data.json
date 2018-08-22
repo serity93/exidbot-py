@@ -1,24 +1,53 @@
 {
-    "roles":
-        {
-            "LEGGO":        {"id":187406326463332352},
-            "Solji":        {"id":268811235137552385},
-            "LE":           {"id":268811310601338897},
-            "Hani":         {"id":268810990076952586},
-            "Hyelin":       {"id":268811385834700801},
-            "Jeonghwa":     {"id":268811463626457088},
-            "SoljiSec":     {"id":170273282203975681},
-            "LESec":        {"id":170273265506451456},
-            "HaniSec":      {"id":170273203657113600},
-            "HyelinSec":    {"id":170273233457774593},
-            "JeonghwaSec":  {"id":170273218471526400},
-            "Subscriber":   {"id":441823514803306497},
-            "Mute":         {"id":428801023482789888},
-            "Blacklist":    {"id":466835937985298466}
+    "roles": {
+        "leggo": {
+            "id": 187406326463332352
         },
-    "leaveMessages":
-        [
-            "I hate you for this, can't you feel it? <:LEDisgust:331124713856303104>",
-            "Better together, oh oh oh~ <:HaniSquint:302921556282310656>"
-        ]
+        "solji": {
+            "id": 268811235137552385
+        },
+        "le": {
+            "id": 268811310601338897
+        },
+        "hani": {
+            "id": 268810990076952586
+        },
+        "hyelin": {
+            "id": 268811385834700801
+        },
+        "jeonghwa": {
+            "id": 268811463626457088
+        },
+        "soljisec": {
+            "id": 170273282203975681
+        },
+        "lesec": {
+            "id": 170273265506451456
+        },
+        "hanisec": {
+            "id": 170273203657113600
+        },
+        "hyelinsec": {
+            "id": 170273233457774593
+        },
+        "jeonghwasec": {
+            "id": 170273218471526400
+        },
+        "subscriber": {
+            "id": 441823514803306497
+        },
+        "mute": {
+            "id": 428801023482789888
+        },
+        "blacklist": {
+            "id": 466835937985298466
+        }
+    },
+    "leaveMessages": [
+        "I hate you for this, can't you feel it? <:LEDisgust:331124713856303104>",
+        "Better together, oh oh oh~ <:HaniSquint:302921556282310656>",
+        "Just do what you wanna, do what you wanna <:HyeWut:331124711625064448>",
+        "Where do you live? Do you live alone? <:HyeEvil:331124681224617986>",
+        "Come back to me, back to me, back, boy <:JungSad:232632633186713601>"
+    ]
 }

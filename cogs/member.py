@@ -26,7 +26,7 @@ class Member:
 
             if role_arg.startswith('-'):
                 role_arg = role_arg[1:]
-                json_role = json_roles.get(role_arg, None)
+                json_role = json_roles.get(role_arg.lower(), None)
                 if json_role is None:
                     message = await context.send("Cannot remove the role '" + role_arg + "'! Did you type it correctly?")
                 else:
@@ -38,7 +38,7 @@ class Member:
                         message = await context.send("Failed to remove the role '" + role_arg + "'!")      
             elif role_arg.startswith('+'):
                 role_arg = role_arg[1:]
-                json_role = json_roles.get(role_arg, None)
+                json_role = json_roles.get(role_arg.lower(), None)
                 if json_role is None:
                     message = await context.send("Cannot add the role '" + role_arg + "'! Did you type it correctly?")
                 else:
