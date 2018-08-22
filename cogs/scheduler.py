@@ -36,6 +36,8 @@ class Scheduler:
             SERVICE_ACCOUNT, scopes=SCOPES)
         self.drive_service = discovery.build('drive', 'v3', credentials=credentials)
 
+        self.add_random_pic_job()
+
     @commands.group()
     @commands.is_owner()
     async def schedule(self, context):
