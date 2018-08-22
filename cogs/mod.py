@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
 
+import asyncio
+
 class Mod:
   def __init__(self, bot):
         self.bot = bot
@@ -94,6 +96,25 @@ class Mod:
       await context.send('Chat has been enabled.')
     except Exception as e:
       await context.send('Error enabling chat: {}'.format(e))
+
+  @commands.command(name='clear',
+    description='Clears messages in the channel (default is 10).')
+  @commands.has_role("Mods")
+  async def clear(self, context, num_messages=10):
+    def is_not_command(m):
+      return m.id != context.message.id
+    
+    bot_message = None
+    
+    try:
+      await context.channel.purge(limit=(num_messages + 1), check=is_not_command)
+      bot_message = await context.send('Cleared {} message(s).'.format(num_messages))
+    except Exception as e:
+      bot_message = await context.send('Error clearing messages: {}'.format(e))
+    finally:
+      await asyncio.sleep(5)
+      await context.message.delete()
+      await bot_message.delete()
 
 def setup(bot):
     bot.add_cog(Mod(bot))
