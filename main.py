@@ -112,7 +112,7 @@ async def on_message(message):
 
 #bot.command - post a gif
 async def gif_command(message):
-    if user_is_blacklisted(message.author.roles):
+    if user_is_blacklisted(message):
         return
 
     gif_name = message.content[1:]
