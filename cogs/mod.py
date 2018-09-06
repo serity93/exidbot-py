@@ -15,7 +15,7 @@ class Mod:
       await context.send('Please enter a message for me to send!')
       return
 
-    await context.send(message)
+    await channel.send(message)
   
   @commands.command(name='announce',
     description='Sends a message in a code block to the channel.')
@@ -25,7 +25,7 @@ class Mod:
       await context.send('Please enter a message for me to send!')
       return
 
-    await context.send('```{}```'.format(message))
+    await channel.send('```{}```'.format(message))
 
   @commands.command(name='mute',
     description='Adds the \'Mute\' role to the member.')
