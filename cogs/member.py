@@ -12,6 +12,7 @@ class Member:
         self.bot = bot
 
     @commands.command(name='role', pass_context=True)
+    @commands.check(not_blacklisted)
     async def role(self, context, role_arg):
         if context.message.channel.id == PICK_UR_BIAS_CHAN_ID:
             with open(JSON_DATA_FILE, "r") as file:
