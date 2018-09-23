@@ -11,32 +11,32 @@ from bottoken import *
 A Discord bot written specifically for the EXID Discord server.
 
 Bot owner & main contributor:
-    Sean Tyler (sean#0493) (https://github.com/serity93/EXIDbot)
+  Sean Tyler (sean#0493) (https://github.com/serity93/EXIDbot)
 
 Discord.py Rewrite Documentation:
-    http://discordpy.readthedocs.io/en/rewrite/api.html
+  http://discordpy.readthedocs.io/en/rewrite/api.html
 
 Discord.py Rewrite Commands Documentation:
-    http://discordpy.readthedocs.io/en/rewrite/ext/commands/api.html
+  http://discordpy.readthedocs.io/en/rewrite/ext/commands/api.html
 """
 
 def get_prefix(bot, message):
-    if not message.guild:
-        return '.'
+  if not message.guild:
+    return '.'
 
-    prefixes = ['.']
+  prefixes = ['.']
 
-    return commands.when_mentioned_or(*prefixes)(bot, message)
+  return commands.when_mentioned_or(*prefixes)(bot, message)
 
 initial_extensions = [
-    'cogs.owner',
-    'cogs.mod',
-    'cogs.events',
-    'cogs.json_data',
-    'cogs.scheduler',
-    'cogs.member',
-    'cogs.random_pic',
-    ]
+  'cogs.owner',
+  'cogs.mod',
+  'cogs.events',
+  'cogs.json_data',
+  'cogs.scheduler',
+  'cogs.member',
+  'cogs.random_pic',
+  ]
 
 # CREATE BOT
 bot = commands.Bot(command_prefix=get_prefix,
@@ -51,11 +51,11 @@ handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(me
 logger.addHandler(handler)
 
 if __name__ == '__main__':
-    for extension in initial_extensions:
-        try:
-            bot.load_extension(extension)
-        except Exception as e:
-            print(f'Failed to load extension {extension}.', file=sys.stderr)
-            traceback.print_exc()
+bot.run(TOKEN)  for extension in initial_extensions:
+  for extension in initial_extensions:
+    try:
+      bot.load_extension(extension)
+    except Exception as e:
+      print(f'Failed to load extension {extension}.', file=sys.stderr)
+      traceback.print_exc()
 
-bot.run(TOKEN)

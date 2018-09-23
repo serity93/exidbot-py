@@ -5,7 +5,7 @@ import asyncio
 
 class Mod:
   def __init__(self, bot):
-        self.bot = bot
+    self.bot = bot
 
   @commands.command(name='say',
     description='Sends a message to the channel.')
@@ -117,4 +117,4 @@ class Mod:
       await bot_message.delete()
 
 def setup(bot):
-    bot.add_cog(Mod(bot))
+  bot.add_cog(Mod(bot))
