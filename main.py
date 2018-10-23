@@ -32,7 +32,7 @@ initial_extensions = [
   'cogs.owner',
   'cogs.mod',
   'cogs.events',
-  'cogs.json_data',
+  #'cogs.json_data',
   'cogs.scheduler',
   'cogs.member',
   'cogs.random_pic',

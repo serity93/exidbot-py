@@ -11,6 +11,15 @@ class Events:
   def __init__(self, bot):
     self.bot = bot
 
+    self.welcome_messages_channel = None
+    self.leave_messages_channel = None
+    self.welcome_messages_enabled = True
+    self.leave_messages_enabled = True
+
+  #
+  # EVENTS
+  #
+
   async def on_ready(self):
     print('\n\n--------')
     print(f'Logged in as: {self.bot.user.name} - {self.bot.user.id}\nVersion: {discord.__version__}')
@@ -21,21 +30,31 @@ class Events:
     print('Successfully logged in and booted..!')
 
   async def on_member_join(self, member):
+    if not self.welcome_messages_enabled:
+      return
+    
     guild = member.guild
-    general_channel = guild.get_channel(GENERAL_CHAN_ID)
-
-    await general_channel.send("Welcome {} to the server! <a:solDanceGif:393867117482737674> Please {} to begin chatting and check out {} for more info! LEGGO!"
-      .format(member.mention,
-      guild.get_channel(PICK_UR_BIAS_CHAN_ID).mention,
-      guild.get_channel(WELCOME_CHAN_ID).mention))
-
     gif = os.path.join(RESOURCES_DIR, WELCOME_GIF)
-    await general_channel.send(file=discord.File(gif))
+    message = "Welcome {} to the server! <a:solDanceGif:393867117482737674> Please {} to begin chatting and check out {} for more info! LEGGO!".format(
+      member.mention,
+      guild.get_channel(PICK_UR_BIAS_CHAN_ID).mention,
+      guild.get_channel(WELCOME_CHAN_ID).mention)
+    
+    if self.welcome_messages_channel is not None:
+      await self.welcome_messages_channel.send(message)
+      await self.welcome_messages_channel.send(file=discord.File(gif))
+    else:
+      general_channel = guild.get_channel(GENERAL_CHAN_ID)
+      await general_channel.send(message)
+      await general_channel.send(file=discord.File(gif))
 
     nugu_role = discord.utils.find(lambda r: r.name == 'Nugu', guild.roles)
     await member.add_roles(nugu_role)
 
   async def on_member_remove(self, member):
+    if not self.leave_messages_enabled:
+      return
+
     with open(JSON_DATA_FILE, "r") as file:
       json_data = json.load(file)
     json_messages = json_data['leaveMessages']
@@ -43,9 +62,13 @@ class Events:
 
     rnd.seed()
     n = rnd.randrange(0, num_msgs)
-
-    channel = member.guild.get_channel(GENERAL_CHAN_ID)
-    await channel.send(f"**{member.name}** left the server! " + json_messages[n])
+    message = f"**{member.name}** left the server! " + json_messages[n]
+    
+    if self.leave_messages_channel is not None:
+      await self.leave_messages_channel.send(message)
+    else:
+      channel = member.guild.get_channel(GENERAL_CHAN_ID)
+      await channel.send(message)
 
   async def on_message(self, message):
     if message.author == self.bot.user:
@@ -73,6 +96,68 @@ class Events:
         gif = os.path.join(GIF_DIR, gif_file)
         await message.channel.send(file=discord.File(gif))
         return
+  
+  #
+  # WELCOME MESSAGES
+  #
+
+  @commands.group()
+  @commands.has_role("Mods")
+  async def welcome_messages(self, context):
+    if context.invoked_subcommand is None:
+      enabled = "enabled" if self.welcome_messages_enabled else "disabled"
+      channel = "general (Default)" if self.welcome_messages_channel is None else self.welcome_messages_channel.name
+      message = "Welcome messages are " + enabled + "\n" + "Channel: " + channel
+      await context.send(message)
+
+  @welcome_messages.command(
+    name='enable',
+    description='Enable welcome messages',
+    aliases=['on'],
+    pass_context=True)
+  async def welcome_messages_enable(self, context):
+    self.welcome_messages_enabled = True
+    await context.send("Welcome messages have been enabled!")
+
+  @welcome_messages.command(
+    name='disable',
+    description='Disable welcome messages',
+    aliases=['off'],
+    pass_context=True)
+  async def welcome_messages_disable(self, context):
+    self.welcome_messages_enabled = False
+    await context.send("Welcome messages have been disabled!")
+
+  #
+  # LEAVE MESSAGES
+  #
+
+  @commands.group()
+  @commands.has_role("Mods")
+  async def leave_messages(self, context):
+    if context.invoked_subcommand is None:
+      enabled = "enabled" if self.leave_messages_enabled else "disabled"
+      channel = "general (Default)" if self.leave_messages_channel is None else self.leave_messages_channel.name
+      message = "Leave messages are " + enabled + "\n" + "Channel: " + channel
+      await context.send(message)
+
+  @leave_messages.command(
+    name='enable',
+    description='Enable leave messages',
+    aliases=['on'],
+    pass_context=True)
+  async def leave_messages_enable(self, context):
+    self.leave_messages_enabled = True
+    await context.send("Leave messages have been enabled!")
+
+  @leave_messages.command(
+    name='disable',
+    description='Disable leave messages',
+    aliases=['off'],
+    pass_context=True)
+  async def leave_messages_disable(self, context):
+    self.leave_messages_enabled = False
+    await context.send("Leave messages have been disabled!")
 
 def setup(bot):
   bot.add_cog(Events(bot))
