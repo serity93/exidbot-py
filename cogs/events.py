@@ -16,6 +16,8 @@ class Events:
     self.welcome_messages_enabled = True
     self.leave_messages_enabled = True
 
+    self.anti_raid_enabled = False
+
   #
   # EVENTS
   #
@@ -33,23 +35,10 @@ class Events:
     if not self.welcome_messages_enabled:
       return
     
-    guild = member.guild
-    gif = os.path.join(RESOURCES_DIR, WELCOME_GIF)
-    message = "Welcome {} to the server! <a:solDanceGif:393867117482737674> Please {} to begin chatting and check out {} for more info! LEGGO!".format(
-      member.mention,
-      guild.get_channel(PICK_UR_BIAS_CHAN_ID).mention,
-      guild.get_channel(WELCOME_CHAN_ID).mention)
-    
-    if self.welcome_messages_channel is not None:
-      await self.welcome_messages_channel.send(message)
-      await self.welcome_messages_channel.send(file=discord.File(gif))
+    if self.anti_raid_enabled:
+      await self.secure_welcome(member)
     else:
-      general_channel = guild.get_channel(GENERAL_CHAN_ID)
-      await general_channel.send(message)
-      await general_channel.send(file=discord.File(gif))
-
-    nugu_role = discord.utils.find(lambda r: r.name == 'Nugu', guild.roles)
-    await member.add_roles(nugu_role)
+      await self.normal_welcome(member)
 
   async def on_member_remove(self, member):
     if not self.leave_messages_enabled:
@@ -97,6 +86,76 @@ class Events:
         await message.channel.send(file=discord.File(gif))
         return
   
+  async def normal_welcome(self, member):
+    guild = member.guild
+    gif = os.path.join(RESOURCES_DIR, WELCOME_GIF)
+    message = "Welcome {} to the server! <a:solDanceGif:393867117482737674> Go and {} and check out {} for more info! LEGGO!".format(
+      member.mention,
+      guild.get_channel(PICK_UR_BIAS_CHAN_ID).mention,
+      guild.get_channel(WELCOME_CHAN_ID).mention)
+    
+    if self.welcome_messages_channel is not None:
+      await self.welcome_messages_channel.send(message)
+      await self.welcome_messages_channel.send(file=discord.File(gif))
+    else:
+      general_channel = guild.get_channel(GENERAL_CHAN_ID)
+      await general_channel.send(message)
+      await general_channel.send(file=discord.File(gif))
+
+    leggo_role = discord.utils.find(lambda r: r.name == 'LEGGO', guild.roles)
+    await member.add_roles(leggo_role)
+  
+  async def secure_welcome(self, member):
+    guild = member.guild
+    gif = os.path.join(RESOURCES_DIR, WELCOME_GIF)
+    message = "Welcome {} to the server! <a:solDanceGif:393867117482737674> Please {} to begin chatting and check out {} for more info! LEGGO!".format(
+      member.mention,
+      guild.get_channel(PICK_UR_BIAS_CHAN_ID).mention,
+      guild.get_channel(WELCOME_CHAN_ID).mention)
+    
+    if self.welcome_messages_channel is not None:
+      await self.welcome_messages_channel.send(message)
+      await self.welcome_messages_channel.send(file=discord.File(gif))
+    else:
+      general_channel = guild.get_channel(GENERAL_CHAN_ID)
+      await general_channel.send(message)
+      await general_channel.send(file=discord.File(gif))
+
+    nugu_role = discord.utils.find(lambda r: r.name == 'Nugu', guild.roles)
+    await member.add_roles(nugu_role)
+
+  #
+  # ANTI RAID
+  #
+
+  @commands.group()
+  @commands.has_role("Mods")
+  async def anti_raid(self, context):
+    if context.invoked_subcommand is None:
+      enabled = "enabled" if self.anti_raid_enabled else "disabled"
+      message = "Anti-raid welcome is currently " + enabled
+      await context.send(message)
+
+  @anti_raid.command(
+    name='enable',
+    description='Enable anti-raid welcome',
+    aliases=['on'],
+    pass_context=True
+  )
+  async def anti_raid_enable(self, context):
+    self.anti_raid_enabled = True
+    await context.send("Anti-raid welcome has been enabled!")
+
+  @anti_raid.command(
+    name='disable',
+    description='Disable anti-raid welcome',
+    aliases=['off'],
+    pass_context=True
+  )
+  async def anti_raid_disable(self, context):
+    self.anti_raid_enabled = False
+    await context.send("Anti-raid welcome has been disabled!")
+
   #
   # WELCOME MESSAGES
   #
