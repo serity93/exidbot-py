@@ -35,6 +35,15 @@ class RandomPic:
   async def solji(self, context):
     await self.random_pic(context, SOLJI_PIC_Q)
 
+  @commands.command(name='soljigif',
+        description='Posts a random Solji gif.',
+        aliases=['soulggif', 'leadergif'],
+        pass_context=True)
+  @commands.cooldown(1, 30, BucketType.user)
+  @commands.check(not_blacklisted)
+  async def soljigif(self, context):
+    await self.random_pic(context, SOLJI_GIF_Q)
+
   @commands.command(name='le',
         description='Posts a random LE pic.',
         aliases=['hyojin', 'elly', 'tom'],
@@ -43,6 +52,15 @@ class RandomPic:
   @commands.check(not_blacklisted)
   async def le(self, context):
     await self.random_pic(context, LE_PIC_Q)
+
+  @commands.command(name='legif',
+        description='Posts a random LE gif.',
+        aliases=['hyojingif', 'ellygif', 'tomgif'],
+        pass_context=True)
+  @commands.cooldown(1, 30, BucketType.user)
+  @commands.check(not_blacklisted)
+  async def legif(self, context):
+    await self.random_pic(context, LE_GIF_Q)
 
   @commands.command(name='hani',
         description='Posts a random Hani pic.',
@@ -53,6 +71,15 @@ class RandomPic:
   async def hani(self, context):
     await self.random_pic(context, HANI_PIC_Q)
 
+  @commands.command(name='hanigif',
+        description='Posts a random Hani gif.',
+        aliases=['heeyeongif'],
+        pass_context=True)
+  @commands.cooldown(1, 30, BucketType.user)
+  @commands.check(not_blacklisted)
+  async def hanigif(self, context):
+    await self.random_pic(context, HANI_GIF_Q)
+
   @commands.command(name='hyelin',
         description='Posts a random Hyelin pic.',
         aliases=['hyerin', 'jenny'],
@@ -61,6 +88,15 @@ class RandomPic:
   @commands.check(not_blacklisted)
   async def hyelin(self, context):
     await self.random_pic(context, HYELIN_PIC_Q)
+
+  @commands.command(name='hyelingif',
+        description='Posts a random Hyelin gif.',
+        aliases=['hyeringif', 'jennygif'],
+        pass_context=True)
+  @commands.cooldown(1, 30, BucketType.user)
+  @commands.check(not_blacklisted)
+  async def hyelingif(self, context):
+    await self.random_pic(context, HYELIN_GIF_Q)
 
   @commands.command(name='jeonghwa',
         description='Posts a random Jeonghwa pic.',
@@ -71,6 +107,15 @@ class RandomPic:
   async def jeonghwa(self, context):
     await self.random_pic(context, JEONGHWA_PIC_Q)
 
+  @commands.command(name='jeonghwagif',
+        description='Posts a random Jeonghwa gif.',
+        aliases=['junghwagif', 'jerrygif', 'maknaegif'],
+        pass_context=True)
+  @commands.cooldown(1, 30, BucketType.user)
+  @commands.check(not_blacklisted)
+  async def jeonghwagif(self, context):
+    await self.random_pic(context, JEONGHWA_GIF_Q)
+
   @commands.command(name='group',
         description='Posts a random group pic.',
         aliases=['exid'],
@@ -79,6 +124,15 @@ class RandomPic:
   @commands.check(not_blacklisted)
   async def group(self, context):
     await self.random_pic(context, GROUP_PIC_Q)
+
+  @commands.command(name='groupgif',
+        description='Posts a random group gif.',
+        aliases=['exidgif'],
+        pass_context=True)
+  @commands.cooldown(1, 30, BucketType.user)
+  @commands.check(not_blacklisted)
+  async def groupgif(self, context):
+    await self.random_pic(context, GROUP_GIF_Q)
 
   @commands.command(name='random',
         description='Posts a random EXID pic.',
@@ -102,6 +156,31 @@ class RandomPic:
       random_q = HYELIN_PIC_Q
     else:
       random_q = JEONGHWA_PIC_Q
+
+    await self.random_pic(context, random_q)
+
+  @commands.command(name='randomgif',
+        description='Posts a random EXID gif.',
+        pass_context=True)
+  @commands.cooldown(1, 30, BucketType.user)
+  @commands.check(not_blacklisted)
+  async def randomgif(self, context):
+    random_q = ''
+    rnd.seed()
+
+    random_int = rnd.randint(1,60)
+    if random_int >= 1 and random_int <= 10:
+      random_q = GROUP_GIF_Q
+    elif random_int >= 11 and random_int <= 20:
+      random_q = SOLJI_GIF_Q
+    elif random_int >= 21 and random_int <= 30:
+      random_q = LE_GIF_Q
+    elif random_int >= 31 and random_int <= 40:
+      random_q = HANI_GIF_Q
+    elif random_int >= 41 and random_int <= 50:
+      random_q = HYELIN_FOLDER
+    else:
+      random_q = JEONGHWA_GIF_Q
 
     await self.random_pic(context, random_q)
 
@@ -147,7 +226,11 @@ class RandomPic:
     while done is False:
       status, done = downloader.next_chunk()
 
-    await context.send(file=discord.File(file_name))
+    try:
+      await context.send(file=discord.File(file_name))
+    except discord.HTTPException:
+      await context.send('The file was too big for me to post... I\'m sorry <:JungSad:232632633186713601>')
+
     await asyncio.sleep(5)
     fh.close()
     os.remove(file_name)
