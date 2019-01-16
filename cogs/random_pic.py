@@ -28,7 +28,7 @@ class RandomPic:
 
   @commands.command(name='solji',
         description='Posts a random Solji pic.',
-        aliases=['soulg'],
+        aliases=['soulg', 'leader'],
         pass_context=True)
   @commands.cooldown(1, 10, BucketType.user)
   @commands.check(not_blacklisted)
@@ -37,7 +37,7 @@ class RandomPic:
 
   @commands.command(name='le',
         description='Posts a random LE pic.',
-        aliases=['hyojin', 'elly'],
+        aliases=['hyojin', 'elly', 'tom'],
         pass_context=True)
   @commands.cooldown(1, 10, BucketType.user)
   @commands.check(not_blacklisted)
@@ -55,7 +55,7 @@ class RandomPic:
 
   @commands.command(name='hyelin',
         description='Posts a random Hyelin pic.',
-        aliases=['hyerin'],
+        aliases=['hyerin', 'jenny'],
         pass_context=True)
   @commands.cooldown(1, 10, BucketType.user)
   @commands.check(not_blacklisted)
@@ -64,7 +64,7 @@ class RandomPic:
 
   @commands.command(name='jeonghwa',
         description='Posts a random Jeonghwa pic.',
-        aliases=['junghwa'],
+        aliases=['junghwa', 'jerry', 'maknae'],
         pass_context=True)
   @commands.cooldown(1, 10, BucketType.user)
   @commands.check(not_blacklisted)
@@ -73,6 +73,7 @@ class RandomPic:
 
   @commands.command(name='group',
         description='Posts a random group pic.',
+        aliases=['exid'],
         pass_context=True)
   @commands.cooldown(1, 10, BucketType.user)
   @commands.check(not_blacklisted)
@@ -131,6 +132,11 @@ class RandomPic:
     
     pics = response.get('files', [])
     num_pics = len(pics)
+
+    if num_pics <= 0:
+      await context.send('I couldn\'t find what you wanted... I\'m sorry <:JungSad:232632633186713601>')
+      return
+
     random_pic = pics[rnd.randint(0, num_pics-1)]
 
     request = self.drive_service.files().get_media(fileId=random_pic['id'])
@@ -145,6 +151,19 @@ class RandomPic:
     await asyncio.sleep(5)
     fh.close()
     os.remove(file_name)
+
+  async def on_command_error(self, context, error):
+    if hasattr(context.command, 'on_error'):
+      return
+
+    ignored = (commands.CommandNotFound, commands.UserInputError)
+
+    error = getattr(error, 'original', error)
+
+    if isinstance(error, ignored):
+      return
+    elif isinstance(error, commands.CommandOnCooldown):
+      await context.send(str(error) + ' <:HaniSquint:302921556282310656>')
 
 def setup(bot):
   if google_installed:
