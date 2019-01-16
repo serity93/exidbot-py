@@ -71,7 +71,8 @@ class Events:
 
     gif_name = message.content[1:]
     gif_files = os.listdir(GIF_DIR)
-    
+    gif_files.sort()
+
     if gif_name == 'list':
       list_string = '```'
       for gif_file in gif_files:
