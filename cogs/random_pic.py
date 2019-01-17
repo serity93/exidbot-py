@@ -64,7 +64,7 @@ class RandomPic:
 
   @commands.command(name='hani',
         description='Posts a random Hani pic.',
-        aliases=['heeyeon'],
+        aliases=['heeyeon', 'fakemaknae', 'mocknae'],
         pass_context=True)
   @commands.cooldown(1, 10, BucketType.user)
   @commands.check(not_blacklisted)
@@ -73,7 +73,7 @@ class RandomPic:
 
   @commands.command(name='hanigif',
         description='Posts a random Hani gif.',
-        aliases=['heeyeongif'],
+        aliases=['heeyeongif', 'fakemaknaegif', 'mocknaegif'],
         pass_context=True)
   @commands.cooldown(1, 30, BucketType.user)
   @commands.check(not_blacklisted)
