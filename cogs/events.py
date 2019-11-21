@@ -22,6 +22,7 @@ class Events(commands.Cog):
   # EVENTS
   #
 
+  @commands.Cog.listener()
   async def on_ready(self):
     print('\n\n--------')
     print(f'Logged in as: {self.bot.user.name} - {self.bot.user.id}\nVersion: {discord.__version__}')
@@ -31,6 +32,7 @@ class Events(commands.Cog):
     
     print('Successfully logged in and booted..!')
 
+  @commands.Cog.listener()
   async def on_member_join(self, member):
     if not self.welcome_messages_enabled:
       return
@@ -40,6 +42,7 @@ class Events(commands.Cog):
     else:
       await self.normal_welcome(member)
 
+  @commands.Cog.listener()
   async def on_member_remove(self, member):
     if not self.leave_messages_enabled:
       return
@@ -59,6 +62,7 @@ class Events(commands.Cog):
       channel = member.guild.get_channel(GENERAL_CHAN_ID)
       await channel.send(message)
 
+  @commands.Cog.listener()
   async def on_message(self, message):
     if message.author == self.bot.user:
       return
