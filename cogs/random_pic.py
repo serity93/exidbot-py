@@ -17,7 +17,7 @@ import random as rnd
 from constants import *
 from util import *
 
-class RandomPic:
+class RandomPic(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
 

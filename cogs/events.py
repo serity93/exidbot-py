@@ -7,7 +7,7 @@ import random as rnd
 from constants import *
 from util import *
 
-class Events:
+class Events(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
 

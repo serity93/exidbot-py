@@ -24,7 +24,7 @@ from constants import *
 
 RANDOM_PIC_JOB_ID = 'random_pic_job_id'
 
-class Scheduler:
+class Scheduler(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
 

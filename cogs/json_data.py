@@ -7,7 +7,7 @@ from constants import *
 
 LEAVE_MESSAGES = 'leaveMessages'
 
-class JsonData:
+class JsonData(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
 

@@ -7,7 +7,7 @@ import json
 from constants import *
 from util import *
 
-class Member:
+class Member(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
 
