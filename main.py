@@ -51,7 +51,6 @@ handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(me
 logger.addHandler(handler)
 
 if __name__ == '__main__':
-bot.run(TOKEN)  for extension in initial_extensions:
   for extension in initial_extensions:
     try:
       bot.load_extension(extension)
@@ -59,3 +58,4 @@ bot.run(TOKEN)  for extension in initial_extensions:
       print(f'Failed to load extension {extension}.', file=sys.stderr)
       traceback.print_exc()
 
+bot.run(TOKEN)
