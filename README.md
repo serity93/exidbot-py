@@ -21,3 +21,5 @@ If you would like to know more about EXID, feel free to join us: https://discord
 - APScheduler
 
 `python3 -m pip install apscheduler`
+
+[![Run on Repl.it](https://repl.it/badge/github/serity93/EXIDbot)](https://repl.it/github/serity93/EXIDbot)
