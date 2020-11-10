@@ -4,6 +4,8 @@ from discord.ext import commands
 import logging
 import sys
 import traceback
+intents = discord.Intents.default()
+intents.members = True
 
 from bottoken import *
 
@@ -41,7 +43,8 @@ initial_extensions = [
 # CREATE BOT
 bot = commands.Bot(command_prefix=get_prefix,
                    description='A bot created for the EXID Discord server.',
-                   case_insensitive=True)
+                   case_insensitive=True,
+                   intents=intents)
 
 # LOGGING
 logger = logging.getLogger('discord')
