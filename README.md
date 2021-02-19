@@ -1,4 +1,4 @@
-# EXIDbot
+# EXIDbot-py
 
 A Discord bot written specifically for the EXID Discord server.
 
