@@ -58,5 +58,5 @@ class Member(commands.Cog):
       await context.message.delete()
       await message.delete()
 
-def setup(bot):
-  bot.add_cog(Member(bot))
+async def setup(bot):
+  await bot.add_cog(Member(bot))

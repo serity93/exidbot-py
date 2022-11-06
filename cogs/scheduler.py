@@ -168,10 +168,10 @@ class Scheduler(commands.Cog):
     fh.close()
     os.remove(file_name)
 
-def setup(bot):
+async def setup(bot):
   if not apscheduler_installed:
     raise RuntimeError("You need to run `pip install apscheduler`")
   elif not google_installed:
     raise RuntimeError("You need to run `pip3 install --upgrade google-api-python-client oauth2client`")
   else:
-    bot.add_cog(Scheduler(bot))
+    await bot.add_cog(Scheduler(bot))

@@ -223,5 +223,5 @@ class Events(commands.Cog):
     self.leave_messages_enabled = False
     await context.send("Leave messages have been disabled!")
 
-def setup(bot):
-  bot.add_cog(Events(bot))
+async def setup(bot):
+  await bot.add_cog(Events(bot))

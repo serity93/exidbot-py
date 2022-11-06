@@ -248,8 +248,8 @@ class RandomPic(commands.Cog):
     elif isinstance(error, commands.CommandOnCooldown):
       await context.send(str(error) + ' <:HaniSquint:302921556282310656>')
 
-def setup(bot):
+async def setup(bot):
   if google_installed:
-    bot.add_cog(RandomPic(bot))
+    await bot.add_cog(RandomPic(bot))
   else:
     raise RuntimeError("You need to run `pip3 install --upgrade google-api-python-client oauth2client`")

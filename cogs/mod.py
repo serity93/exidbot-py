@@ -116,5 +116,5 @@ class Mod(commands.Cog):
       await context.message.delete()
       await bot_message.delete()
 
-def setup(bot):
-  bot.add_cog(Mod(bot))
+async def setup(bot):
+  await bot.add_cog(Mod(bot))
