@@ -1,12 +1,10 @@
 from bottoken import *
+import asyncio
 import traceback
 import sys
 import logging
 import discord
 from discord.ext import commands
-
-intents = discord.Intents.default()
-intents.members = True
 
 
 """
@@ -31,38 +29,45 @@ def get_prefix(bot, message):
 
     return commands.when_mentioned_or(*prefixes)(bot, message)
 
-
-initial_extensions = [
-    'cogs.owner',
-    'cogs.mod',
-    'cogs.events',
-    # 'cogs.json_data',
-    'cogs.scheduler',
-    'cogs.member',
-    'cogs.random_pic',
-]
-
-# CREATE BOT
-bot = commands.Bot(command_prefix=get_prefix,
-                   description='A bot created for the EXID Discord server.',
-                   case_insensitive=True,
-                   intents=intents)
-
-# LOGGING
-logger = logging.getLogger('discord')
-logger.setLevel(logging.INFO)
-handler = logging.FileHandler(
-    filename='discord.log', encoding='utf-8', mode='w')
-handler.setFormatter(logging.Formatter(
-    '%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
-logger.addHandler(handler)
-
-if __name__ == '__main__':
+async def setup_extensions(bot):
+    initial_extensions = [
+        'cogs.owner',
+        'cogs.mod',
+        'cogs.events',
+        # 'cogs.json_data',
+        'cogs.scheduler',
+        'cogs.member',
+        'cogs.random_pic',
+    ]
     for extension in initial_extensions:
         try:
-            bot.load_extension(extension)
+            await bot.load_extension(extension)
         except Exception as e:
             print(f'Failed to load extension {extension}.', file=sys.stderr)
             traceback.print_exc()
 
-bot.run(TOKEN)
+def setup_logging():
+    logger = logging.getLogger('discord')
+    logger.setLevel(logging.INFO)
+    handler = logging.FileHandler(
+        filename='discord.log', encoding='utf-8', mode='w')
+    handler.setFormatter(logging.Formatter(
+        '%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+    logger.addHandler(handler)
+
+def setup_bot():
+    intents = discord.Intents.all()
+    intents.members = True
+    return commands.Bot(
+        command_prefix=get_prefix,
+        description='A bot created for the EXID Discord server.',
+        case_insensitive=True,
+        intents=intents)
+
+async def main():
+    setup_logging()
+    bot = setup_bot()
+    await setup_extensions(bot)
+    await bot.start(TOKEN)
+
+asyncio.run(main())

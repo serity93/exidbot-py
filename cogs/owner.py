@@ -16,5 +16,5 @@ class Owner(commands.Cog):
     await context.send('Logging out... See ya later!')
     await self.bot.logout()
 
-def setup(bot):
-  bot.add_cog(Owner(bot))
+async def setup(bot):
+  await bot.add_cog(Owner(bot))

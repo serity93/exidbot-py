@@ -69,5 +69,5 @@ class JsonData(commands.Cog):
 
     return output
 
-def setup(bot):
-  bot.add_cog(JsonData(bot))
+async def setup(bot):
+  await bot.add_cog(JsonData(bot))
